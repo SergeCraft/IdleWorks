@@ -1,6 +1,6 @@
 namespace CoinSource
 {
-    public class ICoinSource
+    public class ICoinSourceComtroller
     {
         
     }
