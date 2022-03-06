@@ -38,8 +38,6 @@ public class SimpleInstaller : MonoInstaller
     private void SetSignals()
     {
         SignalBusInstaller.Install(Container);
-        
-        
     }
 
     private void SetBindings()
