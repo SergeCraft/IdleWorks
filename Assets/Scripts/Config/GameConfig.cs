@@ -31,13 +31,11 @@ namespace Config
             public float MineRate { get; private set; }
             public Vector3 Position { get; private set; }
             
-            public float ProblemDelay { get; private set; }
-
-            public CoinSourceConfig(float mineRate, Vector3 position, float problemDelay)
+            
+            public CoinSourceConfig(float mineRate, Vector3 position)
             {
                 MineRate = mineRate;
                 Position = position;
-                ProblemDelay = problemDelay;
             }
         }
         
@@ -47,6 +45,7 @@ namespace Config
             public List<SkillConfig> Skills { get; private set; }
             public float Movespeed { get; private set; }
 
+            
             public WorkerBotConfig(Vector3 basePosition, List<SkillConfig> skills, float movespeed)
             {
                 BasePosition = basePosition;
@@ -59,6 +58,7 @@ namespace Config
         {
             public ProblemTypes Type { get; private set; }
 
+            
             public SkillConfig(ProblemTypes type)
             {
                 Type = type;

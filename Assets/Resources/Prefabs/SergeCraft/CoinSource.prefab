@@ -8,19 +8,19 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4758750420147022973}
+  - component: {fileID: 5331877183874556803}
   - component: {fileID: 6514171199536154879}
   - component: {fileID: 6027851341916048790}
   - component: {fileID: 2643164290608233137}
   - component: {fileID: 8838573335100879200}
   m_Layer: 0
   m_Name: CoinSource
-  m_TagString: Untagged
+  m_TagString: CoinSource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4758750420147022973
+--- !u!4 &5331877183874556803
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

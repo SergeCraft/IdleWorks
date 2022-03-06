@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 1173986285623139350}
   m_Layer: 0
   m_Name: WorkerBot
-  m_TagString: Untagged
+  m_TagString: WorkerBot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -1,7 +1,11 @@
 namespace Config
 {
-    public class IGameConfigManager
+    public interface IGameConfigManager
     {
         public GameConfig Config { get; }
+
+        public void UpdateConfig(GameConfig config);
+        
+        public void SaveConfig();
     }
 }
