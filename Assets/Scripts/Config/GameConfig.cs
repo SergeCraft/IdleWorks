@@ -9,6 +9,8 @@ namespace Config
     {
         public List<WorkerBotConfig> WorkerBots { get; private set; }
         public List<CoinSourceConfig> CoinSources { get; private set; }
+        
+        public float ProblemGenerationDelay { get; set; }
 
         public GameConfig()
         {
@@ -28,13 +30,13 @@ namespace Config
 
         public class CoinSourceConfig
         {
-            public float MineRate { get; private set; }
+            public float MiningRate { get; private set; }
             public Vector3 Position { get; private set; }
             
             
-            public CoinSourceConfig(float mineRate, Vector3 position)
+            public CoinSourceConfig(float miningRate, Vector3 position)
             {
-                MineRate = mineRate;
+                MiningRate = miningRate;
                 Position = position;
             }
         }

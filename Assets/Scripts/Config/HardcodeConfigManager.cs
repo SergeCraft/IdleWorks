@@ -32,15 +32,17 @@ namespace Config
         {
             _config = new GameConfig();
 
+            _config.ProblemGenerationDelay = 5.0f;
+
             _config.CoinSources.Add(new GameConfig.CoinSourceConfig(
                 1.0f,
-                new Vector3(-10.0f, 1.5f, 10.0f)));
+                new Vector3(-5.0f, 1.5f, 10.0f)));
             _config.CoinSources.Add(new GameConfig.CoinSourceConfig(
                 2.0f,
                 new Vector3(0.0f, 1.5f, 10.0f)));
             _config.CoinSources.Add(new GameConfig.CoinSourceConfig(
                 0.5f,
-                new Vector3(10.0f, 1.5f, 10.0f)));
+                new Vector3(5.0f, 1.5f, 10.0f)));
             
             _config.WorkerBots.Add(
                 new GameConfig.WorkerBotConfig(

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Zenject;
 
@@ -5,25 +6,39 @@ namespace CoinSource
 {
     public class CoinSourceView : MonoBehaviour
     {
+        private Material material;
+       
 
-        public class Factory : PlaceholderFactory<InitArgs, CoinSourceView>
+        public void SetState(ProblemTypes state)
         {
-            
-        }
-
-        public class InitArgs
-        {
-            public Vector3 Position { get; private set; }
-            public float MiningRate { get; private set; }
-            public float ProblemDelay { get; private set; }
-
-            
-            public InitArgs(Vector3 position, float miningRate, float problemDelay)
+            switch (state)
             {
-                Position = position;
-                MiningRate = miningRate;
-                ProblemDelay = problemDelay;
+                case ProblemTypes.NoProbliem:
+                    material.color = Color.grey;      
+                    break;
+                case ProblemTypes.BlueProblem:
+                    material.color = Color.blue;
+                    break;
+                case ProblemTypes.GreenProblem:
+                    material.color = Color.green;
+                    break;
+                case ProblemTypes.RedProblem:
+                    material.color = Color.red;
+                    break;
             }
         }
+        
+        
+        private void Awake()
+        {
+            material = GetComponent<MeshRenderer>().material;
+        }
+
+        
+        public class Factory : PlaceholderFactory<CoinSourceView>
+        {
+            
+        }
+
     }
 }
