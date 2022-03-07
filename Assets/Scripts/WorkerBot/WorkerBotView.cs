@@ -37,7 +37,7 @@ namespace WorkerBot
                 
                 yield return new WaitForFixedUpdate();
             }
-
+            _actualMove = null;
             _signalBus.Fire(new WorkerBotMoveFinishedSignal(this));
         }
 

@@ -110,8 +110,12 @@ namespace WorkerBot
 
         private void OnCoinSourceStateChanged(CoinSourceStateChangedSignal obj)
         {
-            _tasks.Add(obj);
-            TryAssignWorkerBotToTask(obj);
+            if (obj.Type != ProblemTypes.NoProbliem)
+            {
+                _tasks.Add(obj);
+                TryAssignWorkerBotToTask(obj);
+            }
+            
         }
         
         private void OnWorkerBotStateChanged(WorkerBotStateChangedSignal obj)

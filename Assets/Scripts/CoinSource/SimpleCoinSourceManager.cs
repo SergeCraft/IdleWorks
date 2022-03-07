@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Config;
 using Main;
 using UnityEngine;
@@ -65,7 +66,8 @@ namespace CoinSource
 
         public void Tick()
         {
-            if (Time.time - _lastProblemTime >= _config.ProblemGenerationDelay)
+            if (Time.time - _lastProblemTime >= _config.ProblemGenerationDelay &&
+                _coinSources.All(x => x.ProblemState == ProblemTypes.NoProbliem))
                 GenerateProblem();
         }
 
@@ -77,7 +79,6 @@ namespace CoinSource
                 ProblemTypes.GetValues(typeof(ProblemTypes)).Length);
             var coinSource = _coinSources[ Random.Range(0, _coinSources.Count)];
             coinSource.SetProblem(problemType);
-            _lastProblemTime = Time.time;
         }
         
         private void SubscribeToSignals()
@@ -93,6 +94,7 @@ namespace CoinSource
         private void OnCoinSourceFixed(CoinSourceFixedSignal obj)
         {
             obj.CoinSourceController.SetProblem(ProblemTypes.NoProbliem);
+            _lastProblemTime = Time.time;
         }
     }
 }

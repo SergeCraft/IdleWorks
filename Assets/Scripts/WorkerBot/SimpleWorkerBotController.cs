@@ -131,18 +131,21 @@ namespace WorkerBot
         
         private void OnMoveFinished(WorkerBotMoveFinishedSignal obj)
         {
-            switch (_state)
+            if (obj.WorkerBotView == _wbView)
             {
-                case WorkerBotStates.MovingToFix:
-                    _wbView.MoveTo(_basePosition);
-                    State = WorkerBotStates.MovingToBase;
-                    _signalBus.Fire(new CoinSourceFixedSignal(_actualTarget));
-                    _actualTarget = null;
-                    break;
-                case WorkerBotStates.MovingToBase:
-                    State = WorkerBotStates.Idle;
-                    break;
-            };
+                switch (_state)
+                {
+                    case WorkerBotStates.MovingToFix:
+                        _wbView.MoveTo(_basePosition);
+                        State = WorkerBotStates.MovingToBase;
+                        _signalBus.Fire(new CoinSourceFixedSignal(_actualTarget));
+                        _actualTarget = null;
+                        break;
+                    case WorkerBotStates.MovingToBase:
+                        State = WorkerBotStates.Idle;
+                        break;
+                };
+            }
         }
     }
 }

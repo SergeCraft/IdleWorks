@@ -52,7 +52,7 @@ namespace Config
                         new GameConfig.SkillConfig(ProblemTypes.BlueProblem),
                         new GameConfig.SkillConfig(ProblemTypes.RedProblem)
                     },
-                3.0f
+                1.5f
                 ));
             _config.WorkerBots.Add(
                 new GameConfig.WorkerBotConfig(

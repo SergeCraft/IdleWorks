@@ -7,6 +7,8 @@ namespace CoinSource
     {
         Vector3 Position { get; set; }
         float MiningRate { get; set; }
+        ProblemTypes ProblemState { get; }
+        
         void SetProblem(ProblemTypes problemType);
     }
 }
