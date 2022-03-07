@@ -6,11 +6,11 @@ Target is to reproduce mechanics of tycoon game.
 
 ---
 ## TODO List
-- [ ] Set up a basic architecture with Zenject DI framework
-- [ ] Set up a scene basics (floor, camera)
-- [ ] Code simple game manager controller
-- [ ] Code simple factory prefab, view, controller
-- [ ] Code simple factory manager controller
-- [ ] Code simple worker bot prefab, view, controller
-- [ ] Code simple player manager
+- [x] Set up a basic architecture with Zenject DI framework
+- [x] Set up a scene basics (floor, camera)
+- [x] Code simple game manager controller
+- [x] Code simple factory prefab, view, controller
+- [x] Code simple factory manager controller
+- [x] Code simple worker bot prefab, view, controller
+- [x] Code simple player manager
 - [ ] Code simple UI (optional)

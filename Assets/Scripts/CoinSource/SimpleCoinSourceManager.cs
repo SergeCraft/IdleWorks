@@ -82,13 +82,17 @@ namespace CoinSource
         
         private void SubscribeToSignals()
         {
-            
+            _signalBus.Subscribe<CoinSourceFixedSignal>(OnCoinSourceFixed);
         }
         
         private void UnsubscribeFromSignals()
         {
-            
+            _signalBus.Unsubscribe<CoinSourceFixedSignal>(OnCoinSourceFixed);
         }
 
+        private void OnCoinSourceFixed(CoinSourceFixedSignal obj)
+        {
+            obj.CoinSourceController.SetProblem(ProblemTypes.NoProbliem);
+        }
     }
 }

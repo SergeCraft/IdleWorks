@@ -1,3 +1,5 @@
+using System.Collections;
+using Main;
 using UnityEngine;
 using Zenject;
 
@@ -5,22 +7,44 @@ namespace WorkerBot
 {
     public class WorkerBotView : MonoBehaviour
     {
+        private IEnumerator _actualMove;
+        private SignalBus _signalBus;
+        
+        public float moveSpeed;
 
-
-        public class Factory : PlaceholderFactory<InitArgs, WorkerBotView>
+        [Inject]
+        public void Construct(SignalBus signalBus)
         {
+            _signalBus = signalBus;
+        }
+        
+        public void MoveTo(Vector3 position)
+        {
+            if (_actualMove != null) StopCoroutine(_actualMove);
+            _actualMove = Move(position);
+            StartCoroutine(_actualMove);
         }
 
-        public class InitArgs
-        {
-            public Vector3 Position { get; private set; }
-            public float MoveSpeed { get; private set; }
 
-            public InitArgs(Vector3 position, float moveSpeed)
+        private IEnumerator Move (Vector3 targetPos)
+        {
+            while (transform.position != targetPos)
             {
-                Position = position;
-                MoveSpeed = moveSpeed;
+                transform.position = Vector3.MoveTowards(
+                    transform.position,
+                    targetPos,
+                    moveSpeed * Time.deltaTime);
+                
+                yield return new WaitForFixedUpdate();
             }
+
+            _signalBus.Fire(new WorkerBotMoveFinishedSignal(this));
         }
+
+
+        public class Factory : PlaceholderFactory<WorkerBotView>
+        {
+        }
+
     }
 }

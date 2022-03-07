@@ -1,4 +1,5 @@
 using System;
+using Main;
 using UnityEngine;
 using Zenject;
 
@@ -11,21 +12,7 @@ namespace CoinSource
 
         public void SetState(ProblemTypes state)
         {
-            switch (state)
-            {
-                case ProblemTypes.NoProbliem:
-                    material.color = Color.grey;      
-                    break;
-                case ProblemTypes.BlueProblem:
-                    material.color = Color.blue;
-                    break;
-                case ProblemTypes.GreenProblem:
-                    material.color = Color.green;
-                    break;
-                case ProblemTypes.RedProblem:
-                    material.color = Color.red;
-                    break;
-            }
+            material.color = Helper.ConvertProblemTypeToColor(state);
         }
         
         

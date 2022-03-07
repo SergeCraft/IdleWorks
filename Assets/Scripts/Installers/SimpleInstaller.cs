@@ -23,7 +23,7 @@ public class SimpleInstaller : MonoInstaller
 
     private void SetFactories()
     {
-        Container.BindFactory<WorkerBotView.InitArgs, WorkerBotView, WorkerBotView.Factory>()
+        Container.BindFactory<WorkerBotView, WorkerBotView.Factory>()
             .FromComponentInNewPrefab(_workerBotPrefab);
         Container.BindFactory<SkillView.InitArgs, SkillView, SkillView.Factory>()
             .FromComponentInNewPrefab(_skillPrefab);
@@ -43,6 +43,9 @@ public class SimpleInstaller : MonoInstaller
         SignalBusInstaller.Install(Container);
 
         Container.DeclareSignal<CoinSourceStateChangedSignal>();
+        Container.DeclareSignal<WorkerBotStateChangedSignal>();
+        Container.DeclareSignal<WorkerBotMoveFinishedSignal>();
+        Container.DeclareSignal<CoinSourceFixedSignal>();
     }
 
     private void SetBindings()
@@ -51,5 +54,7 @@ public class SimpleInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<SimpleGameController>().AsSingle();
         Container.BindInterfacesTo<SimpleCoinSourceManager>().AsSingle();
         Container.Bind<ICoinSourceController>().To<SimpleCoinSourceController>().AsTransient();
+        Container.BindInterfacesTo<SimpleWorkerBotManager>().AsSingle();
+        Container.Bind<IWorkerBotController>().To<SimpleWorkerBotController>().AsTransient();
     }
 }

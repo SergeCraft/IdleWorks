@@ -7,20 +7,24 @@ namespace CoinSource
     public class SimpleCoinSourceController : ICoinSourceController
     {
         private SignalBus _signalBus;
-        private ProblemTypes _state;
+        private ProblemTypes _problemState;
+        private CoinSourceStates _workingState;
         private CoinSourceView _view;
 
-        public ProblemTypes State
+        public ProblemTypes ProblemState
         {
             get
             {
-                return _state;
+                return _problemState;
             }
             set
             {
-                _state = value;
-                _signalBus.Fire(new CoinSourceStateChangedSignal(this, _state));
-                _view.SetState(_state);
+                _problemState = value;
+                _signalBus.Fire(new CoinSourceStateChangedSignal(this, _problemState));
+                _workingState = value == ProblemTypes.NoProbliem 
+                    ? CoinSourceStates.Working 
+                    : CoinSourceStates.Idle;
+                _view.SetState(_problemState);
             }
         }
 
@@ -36,12 +40,13 @@ namespace CoinSource
         {
             _view = factory.Create();
             _signalBus = signalBus;
+            ProblemState = ProblemTypes.NoProbliem;
         }
         
         
         public void SetProblem(ProblemTypes problemType)
         {
-            State = problemType;
+            ProblemState = problemType;
         }
 
         public void Dispose()

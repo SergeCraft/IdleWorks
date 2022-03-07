@@ -46,23 +46,23 @@ namespace Config
             
             _config.WorkerBots.Add(
                 new GameConfig.WorkerBotConfig(
-                new Vector3(-5.0f, 1.0f, 0.0f),
+                new Vector3(-1.0f, 1.0f, 0.0f),
                 new List<GameConfig.SkillConfig>()
                     {
                         new GameConfig.SkillConfig(ProblemTypes.BlueProblem),
                         new GameConfig.SkillConfig(ProblemTypes.RedProblem)
                     },
-                1.0f
+                3.0f
                 ));
             _config.WorkerBots.Add(
                 new GameConfig.WorkerBotConfig(
-                new Vector3(5.0f, 1.0f, 0.0f),
+                new Vector3(1.0f, 1.0f, 0.0f),
                 new List<GameConfig.SkillConfig>()
                     {
                         new GameConfig.SkillConfig(ProblemTypes.GreenProblem),
                         new GameConfig.SkillConfig(ProblemTypes.RedProblem)
                     },
-                1.0f
+                5.0f
                 ));
         }
 
