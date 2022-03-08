@@ -1,4 +1,5 @@
 using System;
+using GUI;
 using UnityEngine;
 using Zenject;
 
@@ -8,8 +9,8 @@ namespace Main
     {
         private SignalBus _signalBus;
 
-        
-        public SimpleGameController(SignalBus signalBus)
+
+        public SimpleGameController(SignalBus signalBus, GUIView gui)
         {
             _signalBus = signalBus;
 

@@ -15,7 +15,6 @@ namespace WorkerBot
         private WorkerBotView.Factory _wbFactory;
         private SkillView.Factory _skillFactory;
         private WorkerBotView _wbView;
-        private Vector3 _basePosition;
         private ICoinSourceController _actualTarget;
 
 
@@ -41,9 +40,11 @@ namespace WorkerBot
             set
             {
                 _wbView.transform.position = value;
-                _basePosition = _basePosition == Vector3.zero ? value : _basePosition;
+                BasePosition = BasePosition == Vector3.zero ? value : BasePosition;
             }
         }
+        
+        public Vector3 BasePosition { get; set; }
         
         public List<ProblemTypes> Skills { get; set; }
         public WorkerBotStates State
@@ -88,7 +89,7 @@ namespace WorkerBot
                 skillView.transform.SetParent(_wbView.transform.Find("SkillSet"));
                 
                 skillView.transform.position = new Vector3(
-                    0 - skills.Count * 0.25f + skills.IndexOf(skillCfg),
+                    0 - (skills.Count - 1) * 0.5f + skills.IndexOf(skillCfg),
                     2.2f,
                     0.0f);
             }
@@ -110,6 +111,7 @@ namespace WorkerBot
         public void Dispose()
         {
             UnsubscribeFromSignals();
+            GameObject.Destroy(_wbView.gameObject);
         }
 
 
@@ -136,7 +138,7 @@ namespace WorkerBot
                 switch (_state)
                 {
                     case WorkerBotStates.MovingToFix:
-                        _wbView.MoveTo(_basePosition);
+                        _wbView.MoveTo(BasePosition);
                         State = WorkerBotStates.MovingToBase;
                         _signalBus.Fire(new CoinSourceFixedSignal(_actualTarget));
                         _actualTarget = null;

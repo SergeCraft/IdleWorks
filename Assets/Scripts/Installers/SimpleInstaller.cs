@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CoinSource;
 using Config;
+using GUI;
 using Main;
 using UnityEngine;
 using WorkerBot;
@@ -12,12 +13,13 @@ public class SimpleInstaller : MonoInstaller
     private GameObject _workerBotPrefab;
     private GameObject _skillPrefab;
     private GameObject _coinSourcePrefab;
+    private GameObject _guiPrefab;
     
     public override void InstallBindings()
     {
+        SetPrefabs();
         SetBindings();
         SetSignals();
-        SetPrefabs();
         SetFactories();
     }
 
@@ -36,6 +38,7 @@ public class SimpleInstaller : MonoInstaller
         _workerBotPrefab = Resources.Load<GameObject>("Prefabs/SergeCraft/WorkerBot");
         _skillPrefab = Resources.Load<GameObject>("Prefabs/SergeCraft/Skill");
         _coinSourcePrefab = Resources.Load<GameObject>("Prefabs/SergeCraft/CoinSource");
+        _guiPrefab = Resources.Load<GameObject>("Prefabs/SergeCraft/GUI");
     }
 
     private void SetSignals()
@@ -46,6 +49,10 @@ public class SimpleInstaller : MonoInstaller
         Container.DeclareSignal<WorkerBotStateChangedSignal>();
         Container.DeclareSignal<WorkerBotMoveFinishedSignal>();
         Container.DeclareSignal<CoinSourceFixedSignal>();
+        Container.DeclareSignal<AddWorkerBotRequestedSignal>();
+        Container.DeclareSignal<RemoveWorkerBotRequestedSignal>();
+        Container.DeclareSignal<AddCoinSourceRequestedSignal>();
+        Container.DeclareSignal<RemoveCoinSourceRequestedSignal>();
     }
 
     private void SetBindings()
@@ -56,5 +63,6 @@ public class SimpleInstaller : MonoInstaller
         Container.Bind<ICoinSourceController>().To<SimpleCoinSourceController>().AsTransient();
         Container.BindInterfacesTo<SimpleWorkerBotManager>().AsSingle();
         Container.Bind<IWorkerBotController>().To<SimpleWorkerBotController>().AsTransient();
+        Container.Bind<GUIView>().FromComponentInNewPrefab(_guiPrefab).AsSingle();
     }
 }

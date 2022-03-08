@@ -45,4 +45,26 @@ namespace Main
             WorkerBotView = workerBotView;
         }
     }
+
+    public class AddWorkerBotRequestedSignal
+    {
+        
+    }
+
+    public class RemoveWorkerBotRequestedSignal
+    {
+        
+    }
+
+    public class AddCoinSourceRequestedSignal
+    {
+        
+    }
+
+    public class RemoveCoinSourceRequestedSignal
+    {
+        
+    }
+    
+    
 }

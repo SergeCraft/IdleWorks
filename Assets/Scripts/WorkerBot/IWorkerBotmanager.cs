@@ -12,5 +12,8 @@ namespace WorkerBot
         public void SpawnWorkerBotsFromConfig(GameConfig config);
 
         public void SpawnWorkerBot(Vector3 position, List<GameConfig.SkillConfig> skills, float moveSpeed);
+
+        public void OnAddWorkerBotRequested(AddWorkerBotRequestedSignal signal);
+        public void OnRemoveWorkerBotRequested(RemoveWorkerBotRequestedSignal signal);
     }
 }

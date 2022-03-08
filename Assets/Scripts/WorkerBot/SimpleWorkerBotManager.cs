@@ -6,6 +6,7 @@ using Config;
 using Main;
 using UnityEngine;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace WorkerBot
 {
@@ -62,31 +63,101 @@ namespace WorkerBot
         }
 
 
+
         public void Dispose()
         {
             UnsubscribeFromSignals();
         }
 
-
+        public void OnAddWorkerBotRequested(AddWorkerBotRequestedSignal signal)
+        {
+            AddRandomWorkerBot();
+        }
+        
 
         private void SubscribeToSignals()
         {
             _signalBus.Subscribe<CoinSourceStateChangedSignal>(OnCoinSourceStateChanged);
             _signalBus.Subscribe<WorkerBotStateChangedSignal>(OnWorkerBotStateChanged);
+            _signalBus.Subscribe<AddWorkerBotRequestedSignal>(OnAddWorkerBotRequested);
+            _signalBus.Subscribe<RemoveWorkerBotRequestedSignal>(OnRemoveWorkerBotRequested);
         }
 
         private void UnsubscribeFromSignals()
         {
             _signalBus.Unsubscribe<CoinSourceStateChangedSignal>(OnCoinSourceStateChanged);
             _signalBus.Unsubscribe<WorkerBotStateChangedSignal>(OnWorkerBotStateChanged);
+            _signalBus.Unsubscribe<AddWorkerBotRequestedSignal>(OnAddWorkerBotRequested);
+            _signalBus.Unsubscribe<RemoveWorkerBotRequestedSignal>(OnRemoveWorkerBotRequested);
+        }
+
+
+        private void AddRandomWorkerBot()
+        {
+            var skillSet = new List<GameConfig.SkillConfig>(Random.Range(1,4));
+            for (int i = 0; i < skillSet.Capacity; i++)
+            {
+                GameConfig.SkillConfig tempSkill = null;
+                do
+                {
+                    tempSkill = new GameConfig.SkillConfig((ProblemTypes) Random.Range(1, 4));
+                } while (skillSet.Any(skill => skill == tempSkill));
+                
+                skillSet.Add(tempSkill);
+            }
+            
+            SpawnWorkerBot(
+                Vector3.zero, 
+                skillSet,
+                Random.Range(2.0f, 10.0f));
+            RecalculateWorkerBotPositions();
+            if(_tasks.Count > 0) 
+                TryAssignWorkerBotToTask(_tasks.FirstOrDefault());
+        }
+        
+        
+        private void RemoveRandomWorkerBot()
+        {
+            var removableBots = 
+                _workerBots.Where(x => x.State == WorkerBotStates.Idle).ToList();
+            if (removableBots.Count > 0)
+            {
+                int id = Random.Range(0, removableBots.Count);removableBots[id].Dispose();
+                _workerBots.Remove(removableBots[id]);
+                RecalculateWorkerBotPositions();
+            }
+            
+        }
+
+        private void RecalculateWorkerBotPositions()
+        {
+            float minPosX = -5.0f;
+            float maxPosX = 5.0f;
+            float spaceX = 1.0f;
+            if (_workerBots.Count > 1)
+            {
+                spaceX = (maxPosX - minPosX) / (_workerBots.Count - 1);
+            }
+            else
+            {
+                spaceX = (maxPosX - minPosX) / 2;
+                minPosX = 0.0f;
+            }
+            foreach (var bot in _workerBots)
+            {
+                bot.BasePosition = new Vector3(
+                    minPosX + spaceX * _workerBots.IndexOf(bot),
+                    1.0f,
+                    bot.BasePosition.z
+                );
+                if(bot.State == WorkerBotStates.Idle) bot.Position = bot.BasePosition;
+            }
+
+            ;
         }
 
         private void TryAssignWorkerBotToTask(CoinSourceStateChangedSignal coinSourceStateChangedSignal)
         {
-            // IWorkerBotController bot = _workerBots.Where(x => 
-            //     x.Skills.Any(y => y == coinSourceStateChangedSignal.Type)
-            //     && x.State == WorkerBotStates.Idle) 
-            //     .FirstOrDefault();
             IWorkerBotController bot = _workerBots 
                 .FirstOrDefault(x => 
                     Enumerable.Any<ProblemTypes>(
@@ -130,5 +201,11 @@ namespace WorkerBot
                     break;
             }
         }
+        
+        public void OnRemoveWorkerBotRequested(RemoveWorkerBotRequestedSignal signal)
+        {
+            RemoveRandomWorkerBot();
+        }
+        
     }
 }
