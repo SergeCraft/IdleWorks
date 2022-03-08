@@ -1,4 +1,5 @@
 using Config;
+using Main;
 using UnityEngine;
 
 namespace CoinSource
@@ -10,5 +11,8 @@ namespace CoinSource
         void SpawnCoinSourcesFromConfig(GameConfig cfg);
 
         void DestroyCoinSource(ICoinSourceController coinSourceController);
+
+        void OnAddCoinSourceRequested(AddCoinSourceRequestedSignal signal);
+        void OnRemoveCoinSourceRequested(RemoveCoinSourceRequestedSignal signal);
     }
 }

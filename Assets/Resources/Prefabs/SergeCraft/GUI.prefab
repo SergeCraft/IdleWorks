@@ -441,7 +441,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5399181311445025873
 RectTransform:
   m_ObjectHideFlags: 0
@@ -833,7 +833,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Add \nworker"
+  m_Text: 'Remove
+
+    farm'
 --- !u!1 &5610789340357819489
 GameObject:
   m_ObjectHideFlags: 0
@@ -912,7 +914,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Remove worker
+  m_Text: 'Add
+
+    farm'
 --- !u!1 &8620703514457557572
 GameObject:
   m_ObjectHideFlags: 0

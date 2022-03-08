@@ -1,10 +1,11 @@
+using System;
 using Main;
 using UnityEngine;
 using Zenject;
 
 namespace CoinSource
 {
-    public class SimpleCoinSourceController : ICoinSourceController
+    public class SimpleCoinSourceController : ICoinSourceController, IDisposable
     {
         private SignalBus _signalBus;
         private ProblemTypes _problemState;
@@ -51,7 +52,7 @@ namespace CoinSource
 
         public void Dispose()
         {
-            
+            GameObject.Destroy(_view.gameObject);
         }
     }
 }

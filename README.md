@@ -13,4 +13,4 @@ Target is to reproduce mechanics of tycoon game.
 - [x] Code simple factory manager controller
 - [x] Code simple worker bot prefab, view, controller
 - [x] Code simple player manager
-- [ ] Code simple UI (optional)
+- [x] Code simple UI (optional)

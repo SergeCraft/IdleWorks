@@ -50,6 +50,7 @@ namespace CoinSource
                     csConfig.Position,
                     csConfig.MiningRate);
             }
+            RecalculatePositions();
         }
 
         public void DestroyCoinSource(ICoinSourceController coinSourceController)
@@ -57,7 +58,7 @@ namespace CoinSource
             _coinSources.Remove(coinSourceController);
             coinSourceController.Dispose();
         }
-        
+
         public void Dispose()
         {
             UnsubscribeFromSignals();
@@ -84,17 +85,75 @@ namespace CoinSource
         private void SubscribeToSignals()
         {
             _signalBus.Subscribe<CoinSourceFixedSignal>(OnCoinSourceFixed);
+            _signalBus.Subscribe<AddCoinSourceRequestedSignal>(OnAddCoinSourceRequested);
+            _signalBus.Subscribe<RemoveCoinSourceRequestedSignal>(OnRemoveCoinSourceRequested);
         }
         
         private void UnsubscribeFromSignals()
         {
             _signalBus.Unsubscribe<CoinSourceFixedSignal>(OnCoinSourceFixed);
+            _signalBus.Unsubscribe<AddCoinSourceRequestedSignal>(OnAddCoinSourceRequested);
+            _signalBus.Unsubscribe<RemoveCoinSourceRequestedSignal>(OnRemoveCoinSourceRequested);
+        }
+        
+        
+        private void SpawnRandomCoinSource()
+        {
+            SpawnCoinSource(Vector3.zero, Random.Range(0.5f, 10.0f));
+            RecalculatePositions();
         }
 
+        private void RemoveRandomCoinSource()
+        {
+            var coinSourceToRemove = _coinSources[Random.Range(0, _coinSources.Count)];
+            coinSourceToRemove.Dispose();
+            _coinSources.Remove(coinSourceToRemove);
+            RecalculatePositions();
+        }
+
+        private void RecalculatePositions()
+        {
+            float minPosX = -5.0f;
+            float maxPosX = 5.0f;
+            float spaceX;
+                
+            if (_coinSources.Count > 1)
+            {
+                spaceX = (maxPosX - minPosX)/(_coinSources.Count - 1);
+            }
+            else
+            {
+                spaceX = maxPosX - minPosX / 2;
+            }
+
+            foreach (var coinSource in _coinSources)
+            {
+                coinSource.Position = new Vector3(
+                    minPosX + spaceX * _coinSources.IndexOf(coinSource),
+                    1.5f,
+                    10.0f
+                );
+            }
+            
+        }
+
+        
         private void OnCoinSourceFixed(CoinSourceFixedSignal obj)
         {
             obj.CoinSourceController.SetProblem(ProblemTypes.NoProbliem);
             _lastProblemTime = Time.time;
         }
+
+        public void OnAddCoinSourceRequested(AddCoinSourceRequestedSignal signal)
+        {
+            SpawnRandomCoinSource();
+        }
+
+
+        public void OnRemoveCoinSourceRequested(RemoveCoinSourceRequestedSignal signal)
+        {
+            RemoveRandomCoinSource();
+        }
+
     }
 }
