@@ -16,6 +16,7 @@ namespace WorkerBot
         private SkillView.Factory _skillFactory;
         private WorkerBotView _wbView;
         private ICoinSourceController _actualTarget;
+        private Vector3 _basePosition;
 
 
 
@@ -43,9 +44,21 @@ namespace WorkerBot
                 BasePosition = BasePosition == Vector3.zero ? value : BasePosition;
             }
         }
-        
-        public Vector3 BasePosition { get; set; }
-        
+
+        public Vector3 BasePosition
+        {
+            get
+            {
+                return _basePosition;
+            }
+            set
+            {
+                _basePosition = value;
+                RetargetTo(_basePosition);
+            }
+        }
+
+
         public List<ProblemTypes> Skills { get; set; }
         public WorkerBotStates State
         {
@@ -129,8 +142,19 @@ namespace WorkerBot
         {
             _signalBus.Unsubscribe<WorkerBotMoveFinishedSignal>(OnMoveFinished);
         }
-
         
+        
+        private void RetargetTo(Vector3 position)
+        {
+            switch (State)
+            {
+                case WorkerBotStates.MovingToBase:
+                    _wbView.MoveTo(position);
+                    break;
+            }
+            ;
+        }
+
         private void OnMoveFinished(WorkerBotMoveFinishedSignal obj)
         {
             if (obj.WorkerBotView == _wbView)

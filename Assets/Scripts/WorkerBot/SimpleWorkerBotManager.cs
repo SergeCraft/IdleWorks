@@ -131,8 +131,8 @@ namespace WorkerBot
 
         private void RecalculateWorkerBotPositions()
         {
-            float minPosX = -5.0f;
-            float maxPosX = 5.0f;
+            float minPosX = -3.0f;
+            float maxPosX = 3.0f;
             float spaceX = 1.0f;
             if (_workerBots.Count > 1)
             {
