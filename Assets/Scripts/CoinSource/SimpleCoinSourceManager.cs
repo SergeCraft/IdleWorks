@@ -18,15 +18,21 @@ namespace CoinSource
         private List<ICoinSourceController> _coinSources;
         private IEnumerator _problemsCoroutine;
         private float _lastProblemTime;
+        private Score.Score _score;
 
 
-        public SimpleCoinSourceManager(IGameConfigManager configMgr, SignalBus signalBus, DiContainer container)
+        public SimpleCoinSourceManager(
+            IGameConfigManager configMgr,
+            SignalBus signalBus,
+            DiContainer container,
+            Score.Score score)
         {
             _signalBus = signalBus;
             _config = configMgr.Config;
             _container = container;
             _coinSources = new List<ICoinSourceController>();
             _lastProblemTime = Time.time;
+            _score = score;
 
             SubscribeToSignals();
             SpawnCoinSourcesFromConfig(_config);
@@ -40,6 +46,7 @@ namespace CoinSource
              ctlr.Position = position;
              ctlr.MiningRate = miningRate;
              _coinSources.Add(ctlr);
+             _score.UpdateCoinRate(miningRate);
         }
 
         public void SpawnCoinSourcesFromConfig(GameConfig cfg)
@@ -57,6 +64,7 @@ namespace CoinSource
         {
             _coinSources.Remove(coinSourceController);
             coinSourceController.Dispose();
+            _score.UpdateCoinRate(- coinSourceController.MiningRate);
         }
 
         public void Dispose()
@@ -67,9 +75,20 @@ namespace CoinSource
 
         public void Tick()
         {
-            if (Time.time - _lastProblemTime >= _config.ProblemGenerationDelay &&
-                _coinSources.All(x => x.ProblemState == ProblemTypes.NoProbliem))
-                GenerateProblem();
+            switch (_config.Mode)
+            {
+                case GameModes.TestTask:
+                    if (Time.time - _lastProblemTime >= _config.ProblemGenerationDelay &&
+                    _coinSources.All(x => x.ProblemState == ProblemTypes.NoProbliem))
+                        GenerateProblem();
+                    break;
+                case GameModes.Multiproblem:
+                    if (Time.time - _lastProblemTime >= _config.ProblemGenerationDelay)
+                        GenerateProblem();
+                    break;
+            }
+            
+            
         }
 
         
@@ -78,8 +97,14 @@ namespace CoinSource
             var problemType = (ProblemTypes)Random.Range(
                 1, 
                 ProblemTypes.GetValues(typeof(ProblemTypes)).Length);
-            var coinSource = _coinSources[ Random.Range(0, _coinSources.Count)];
+            // var breakableCoinSources = _coinSources
+            //     .Where(x => x.ProblemState == ProblemTypes.NoProbliem).ToList();
+            var breakableCoinSources = _coinSources;
+            var coinSource = breakableCoinSources[ Random.Range(0, breakableCoinSources.Count)];
             coinSource.SetProblem(problemType);
+            
+            _score.UpdateCoinRate(-coinSource.MiningRate);
+            if (_config.Mode == GameModes.Multiproblem)_lastProblemTime = Time.time;
         }
         
         private void SubscribeToSignals()
@@ -99,7 +124,7 @@ namespace CoinSource
         
         private void SpawnRandomCoinSource()
         {
-            SpawnCoinSource(Vector3.zero, Random.Range(0.5f, 10.0f));
+            SpawnCoinSource(Vector3.zero, Random.Range(1, 5));
             RecalculatePositions();
         }
 
@@ -141,7 +166,8 @@ namespace CoinSource
         private void OnCoinSourceFixed(CoinSourceFixedSignal obj)
         {
             obj.CoinSourceController.SetProblem(ProblemTypes.NoProbliem);
-            _lastProblemTime = Time.time;
+            _score.UpdateCoinRate(obj.CoinSourceController.MiningRate);
+            if (_config.Mode == GameModes.TestTask) _lastProblemTime = Time.time;
         }
 
         public void OnAddCoinSourceRequested(AddCoinSourceRequestedSignal signal)

@@ -9,6 +9,8 @@ namespace Config
     {
         public List<WorkerBotConfig> WorkerBots { get; private set; }
         public List<CoinSourceConfig> CoinSources { get; private set; }
+
+        public GameModes Mode { get; private set; }
         
         public float ProblemGenerationDelay { get; set; }
 
@@ -16,6 +18,7 @@ namespace Config
         {
             WorkerBots = new List<WorkerBotConfig>();
             CoinSources = new List<CoinSourceConfig>();
+            Mode = GameModes.Multiproblem;
         }
 
         public void AddCoinSourceConfig(CoinSourceConfig cfg)

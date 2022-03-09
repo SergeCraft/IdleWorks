@@ -17,6 +17,7 @@ namespace WorkerBot
         private SignalBus _signalBus;
         private List<IWorkerBotController> _workerBots;
         private List<CoinSourceStateChangedSignal> _tasks;
+        private Score.Score _score;
 
         public List<CoinSourceStateChangedSignal> Tasks { get; private set; }
 
@@ -25,13 +26,15 @@ namespace WorkerBot
         public SimpleWorkerBotManager(
             SignalBus signalBus,
             IGameConfigManager configMgr,
-            DiContainer container)
+            DiContainer container,
+            Score.Score score)
         {
             _signalBus = signalBus;
             _config = configMgr.Config;
             _container = container;
             _workerBots = new List<IWorkerBotController>();
             _tasks = new List<CoinSourceStateChangedSignal>();
+            _score = score;
 
             SpawnWorkerBotsFromConfig(_config);
             SubscribeToSignals();
@@ -60,9 +63,9 @@ namespace WorkerBot
             bot.Movespeed = moveSpeed;
             
             _workerBots.Add(bot);
+            
+            _score.UpdateCoinRate(-1.0f);
         }
-
-
 
         public void Dispose()
         {
@@ -113,6 +116,8 @@ namespace WorkerBot
             RecalculateWorkerBotPositions();
             if(_tasks.Count > 0) 
                 TryAssignWorkerBotToTask(_tasks.FirstOrDefault());
+            
+            _score.UpdateCoinRate(-1.0f);
         }
         
         
@@ -126,7 +131,7 @@ namespace WorkerBot
                 _workerBots.Remove(removableBots[id]);
                 RecalculateWorkerBotPositions();
             }
-            
+            _score.UpdateCoinRate(1.0f);
         }
 
         private void RecalculateWorkerBotPositions()
@@ -177,8 +182,7 @@ namespace WorkerBot
             bot.AssignTask(coinSourceStateChangedSignal.CoinSourceController);
             _tasks.Remove(coinSourceStateChangedSignal);
         }
-
-
+        
         private void OnCoinSourceStateChanged(CoinSourceStateChangedSignal obj)
         {
             if (obj.Type != ProblemTypes.NoProbliem)

@@ -1,3 +1,4 @@
+using Main;
 using UnityEngine.UI;
 
 namespace GUI
@@ -18,6 +19,6 @@ namespace GUI
 
         void RemoveCoinSourceButtonClicked();
 
-        void OnScoreChanged();
+        void OnScoreChanged(ScoreUpdatedSignal score);
     }
 }

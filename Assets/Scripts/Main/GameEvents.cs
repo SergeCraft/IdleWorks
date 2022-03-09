@@ -65,6 +65,16 @@ namespace Main
     {
         
     }
+
+    public class ScoreUpdatedSignal
+    {
+        public Score.Score Score { get; private set; }
+
+        public ScoreUpdatedSignal(Score.Score score)
+        {
+            Score = score;
+        }
+    }
     
     
 }

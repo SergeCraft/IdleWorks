@@ -1,3 +1,4 @@
+using System;
 using Main;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,7 +6,7 @@ using Zenject;
 
 namespace GUI
 {
-    public class GUIView : MonoBehaviour, IGUIView
+    public class GUIView : MonoBehaviour, IGUIView, IDisposable
     {
         private SignalBus _signalBus;
         
@@ -13,6 +14,7 @@ namespace GUI
         public Button RemoveBotButton { get; private set; }
         public Button AddCoinSourceButton { get; private set; }
         public Button RemoveCoinSourceButton { get; private set; }
+        public Text MiningRateText { get; private set; }
 
         [Inject]
         public void Construct(SignalBus signalBus)
@@ -23,7 +25,9 @@ namespace GUI
             RemoveBotButton = transform.Find("RemoveBotButton").GetComponent<Button>();
             AddCoinSourceButton = transform.Find("AddCoinSourceButton").GetComponent<Button>();
             RemoveCoinSourceButton = transform.Find("RemoveCoinSourceButton").GetComponent<Button>();
+            MiningRateText = transform.Find("MiningRateText").GetComponent<Text>();
             
+            SubscribeToSignals();
         }
 
         public void AddBotButtonClicked()
@@ -46,9 +50,24 @@ namespace GUI
             _signalBus.Fire<RemoveCoinSourceRequestedSignal>();
         }
 
-        public void OnScoreChanged()
+        public void OnScoreChanged(ScoreUpdatedSignal score)
         {
-            
+            MiningRateText.text = $"Mining rate: {score.Score.CoinsPerSec} $/sec";
+        }
+
+        public void Dispose()
+        {
+            UnsubscribeFromSignals();
+        }
+
+        private void SubscribeToSignals()
+        {
+            _signalBus.Subscribe<ScoreUpdatedSignal>(OnScoreChanged);
+        }
+        
+        private void UnsubscribeFromSignals()
+        {
+            _signalBus.Unsubscribe<ScoreUpdatedSignal>(OnScoreChanged);
         }
     }
 }

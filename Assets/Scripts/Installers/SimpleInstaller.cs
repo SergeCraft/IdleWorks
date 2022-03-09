@@ -7,6 +7,7 @@ using Main;
 using UnityEngine;
 using WorkerBot;
 using Zenject;
+using Score = Score.Score;
 
 public class SimpleInstaller : MonoInstaller
 {
@@ -53,6 +54,7 @@ public class SimpleInstaller : MonoInstaller
         Container.DeclareSignal<RemoveWorkerBotRequestedSignal>();
         Container.DeclareSignal<AddCoinSourceRequestedSignal>();
         Container.DeclareSignal<RemoveCoinSourceRequestedSignal>();
+        Container.DeclareSignal<ScoreUpdatedSignal>();
     }
 
     private void SetBindings()
@@ -64,5 +66,6 @@ public class SimpleInstaller : MonoInstaller
         Container.BindInterfacesTo<SimpleWorkerBotManager>().AsSingle();
         Container.Bind<IWorkerBotController>().To<SimpleWorkerBotController>().AsTransient();
         Container.Bind<GUIView>().FromComponentInNewPrefab(_guiPrefab).AsSingle();
+        Container.Bind<global::Score.Score>().AsSingle();
     }
 }
